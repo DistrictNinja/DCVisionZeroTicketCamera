@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 100%;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .viz {
+            width: 100%;
+        }
+
+        div.ttip {
+            position: absolute;
+            background-color: #669ac7;
+            border: 1px solid #366791;
+            color: #f1f1f1;
+            padding: 4px 8px;
+            display: none;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        .vizPanel {
+            width: 100%;
+            height: 900px;
+            display: inline-block;
+        }
+
+        #svgMap {
+            display: inline-block;
+        }
+
+        .container {
+            text-align: center;
+            margin: 1.2em 0em;
+        }
+
+        .footnote {
+            text-align: right;
+            font-size: .7em;
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+        d3.json("annotatedData.geojson", function (error, data) {
+            if (error) throw error;
+console.log(data);
+      tooltip = d3.select("body").append("div").attr("class", "ttip");
+
+            var stopLight = d3.scale.linear()
+                    .domain([0, 50, 200, 500,1000,3000])
+                    .range(["#d3d3d3", "#545454","yellow","green", "orange", "red"]);
+
+            var mapProjection = d3.geo.mercator()
+                    .scale(257270.5)
+                    .center([-77.0144701798118, 38.89920210515231]) //projection center
+                    .translate([$("#svgMap").width() / 2,
+                        $("#svgMap").height() / 2]); //translate to center the map in view
+
+            var path = d3.geo.path()
+                    .projection(mapProjection);
+
+            var map = d3.select("#svgMap");
+            map.selectAll("path")
+                    .data(data.features)
+                    .enter().append("path")
+                    .attr("d", path)
+                    .attr("fill","white" )
+                    .attr("stroke", function (obj, index) {
+                        return stopLight(obj.properties.total);
+                    })
+                    .attr("stroke-width", function (obj, index) {
+                        if(obj.properties.total==0){
+                           return "1";
+                        }else if(obj.properties.total>5000){
+                            return "5";
+                        }else{
+                            return "2";
+                        }
+
+                    })
+//                    .on("click", hoodClick)
+                    .on("mouseover", mouseOver)
+                    .on("mousemove", mouseMove)
+                    .on("mouseout", clearTip)
+//                    .on("dblclick",  DN.createInitialGraph);
+        });
+
+
+
+        function clearTip() {
+            tooltip.style("display", "none");
+        };
+
+        function mouseMove() {
+            tooltip.style("top", (d3.event.pageY + 5) + "px")
+                    .style("left", (d3.event.pageX + 15) + "px");
+        };
+
+        function mouseOver(obj, index) {
+            if(obj.properties.total > 0){
+            tooltip.style("display", "block")
+                    .html("<div class='align:center'>" + obj.properties.registered + " " + obj.properties.streettype + " " + obj.properties.quadrant +"</div><div>Total Tickets: " + (obj.properties.total ? obj.properties.total : "0") + "</div>");
+            }
+        };
+    </script>
+</head>
+<body>
+
+<div class="viz">
+    <div class="title">
+        <div class="header">Vision Zero: Photo Tickets 2010-2014</div>
+    </div>
+    <div class="container">
+        <div class="vizPanel">
+              <svg id="svgMap" width="100%" height="100%" shape-rendering="auto"></svg>
+        </div>
+        <div class="footnote">Data By: DC Vision Zero Project</div>
+    </div>
+</body>
+</html>
