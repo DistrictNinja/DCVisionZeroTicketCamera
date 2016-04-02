@@ -3,7 +3,7 @@ library(jsonlite)
 library(rgdal)
 
 
-setwd("C:/Users/admin/WebstormProjects/VisionZeroCameraTickets/2010")
+setwd("C:/Users/admin/WebstormProjects/VisionZeroCameraTickets/data")
 
 #streetSegis <- readOGR("C:/Users/admin/WebstormProjects/VisionZeroCameraTickets/street_segments.geojson", "OGRGeoJSON")
 
