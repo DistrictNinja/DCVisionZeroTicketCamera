@@ -99,12 +99,12 @@
                         return stopLight(obj.properties[dataSwitch]);
                     })
                     .attr("stroke-width", function (obj, index) {
-                        if(obj.properties[dataSwitch]==0){
+                        if(obj.properties[dataSwitch]==null){
                             return "1";
                         }else if(obj.properties[dataSwitch]>5000){
-                            return "5";
+                            return "8";
                         }else{
-                            return "2";
+                            return "4";
                         }
 
                     })
@@ -139,12 +139,28 @@
 
             dataSwitch = month+"_"+year;
 
-            var svg = d3.select("#svgMap");
-            svg.remove();
-            d3.select(".vizPanel").append("svg").attr("width", "100%").attr("height", "100%").attr("id","svgMap");
+            var map = d3.select("#svgMap");
+            map.selectAll("path")
+                    .attr("stroke", function (obj, index) {
+                        return stopLight(obj.properties[dataSwitch]);
+                    })
+                    .attr("stroke-width", function (obj, index) {
+                        if(obj.properties[dataSwitch]==null){
+                            return "1";
+                        }else if(obj.properties[dataSwitch]>5000){
+                            return "8";
+                        }else{
+                            return "4";
+                        }
 
-            console.log("data",dataSwitch);
-            generateD3Map(globalData);
+                    })
+
+//            var svg = d3.select("#svgMap");
+//            svg.remove();
+//            d3.select(".vizPanel").append("svg").attr("width", "100%").attr("height", "100%").attr("id","svgMap");
+
+  //          console.log("data",dataSwitch);
+//            generateD3Map(globalData);
 
         }
     </script>
