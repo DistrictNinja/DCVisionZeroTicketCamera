@@ -56,22 +56,22 @@ DN.generateD3Map=function(data){
             if (obj.properties[DN.dataSwitch] == null) {
                 return "1";
             } else if (obj.properties[DN.dataSwitch] > 5000) {
-                return "10";
+                return "20";
             }else if (obj.properties[DN.dataSwitch] > 4000) {
-                return "9";
+                return "18";
             }else if (obj.properties[DN.dataSwitch] > 3000) {
-                return "8";
+                return "16";
             }else if (obj.properties[DN.dataSwitch] > 2000) {
-                return "7";
+                return "14";
             }else if (obj.properties[DN.dataSwitch] > 1000) {
-                return "6";
+                return "12";
             } else if (obj.properties[DN.dataSwitch] > 500) {
-                return "5";
+                return "8";
             }else if (obj.properties[DN.dataSwitch] > 300) {
-                return "4";
+                return "5";
             }
             else {
-                return "3";
+                return "2";
             }
         })
         //                    .on("click", hoodClick)

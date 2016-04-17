@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link  rel="stylesheet" type="text/css" href="ticketCamera.css"></link>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.1.6.min.js"></script>
+    <script src="main.js"></script>
+
+    <meta charset="UTF-8">
+    <title>DC Vision Zero: Traffic Cameras</title>
+
+</head>
+
+<body>
+
+<div class="viz">
+    <div class="title">
+        <div id="animationTopCaption" class="header">Vision Zero: Photo Tickets 2010-2014 </div>
+        <div  class="header">
+        <select id="MonthSelector">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+
+            </select>
+            <select id="YearSelector">
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+            </select>
+            <button onclick='DN.changeMap()' type="button">Select</button>
+            <button id='animateButton' onclick='DN.animateMap()' type="button">Animate</button>
+
+        </div>
+
+
+
+
+    <div class="container">
+
+                    <div class="vizPanel">
+                        <div id="loader_container"> </div>
+                </div>
+
+
+    <div class="footnote">Data By: DC Vision Zero Project</div>
+
+    </div>
+
+
+</div>
+
+<script>
+
+    function loader(config) {
+        return function() {
+            var radius = Math.min(config.width, config.height) / 2;
+            var tau = 2 * Math.PI;
+
+            var arc = d3.svg.arc()
+                    .innerRadius(radius*0.5)
+                    .outerRadius(radius*0.9)
+                    .startAngle(0);
+
+            var svg = d3.select(config.container).append("svg")
+                    .attr("id", config.id)
+                    .attr("width", config.width)
+                    .attr("height", config.height)
+                    .append("g")
+                    .attr("transform", "translate(" + config.width / 2 + "," + config.height / 2 + ")")
+
+            var background = svg.append("path")
+                    .datum({endAngle: 0.33*tau})
+                    .style("fill", "#4D4D4D")
+                    .attr("d", arc)
+                    .call(spin, 1500)
+
+            function spin(selection, duration) {
+                selection.transition()
+                        .ease("linear")
+                        .duration(duration)
+                        .attrTween("transform", function() {
+                            return d3.interpolateString("rotate(0)", "rotate(360)");
+                        });
+
+                setTimeout(function() { spin(selection, duration); }, duration);
+            }
+
+            function transitionFunction(path) {
+                path.transition()
+                        .duration(7500)
+                        .attrTween("stroke-dasharray", tweenDash)
+                        .each("end", function() { d3.select(this).call(transition); });
+            }
+
+        };
+    }
+
+
+    var myLoader = loader({width: 960, height: 500, container: "#loader_container", id: "loader"});
+    myLoader();
+
+</script>
+</body>
+</html>
