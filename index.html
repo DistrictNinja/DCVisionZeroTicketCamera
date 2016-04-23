@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <link  rel="stylesheet" type="text/css" href="ticketCamera.css"></link>
+    <link  rel="stylesheet" type="text/css" href="c3.min.css"></link>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://dimplejs.org/dist/dimple.v2.1.6.min.js"></script>
+    <script src="c3.min.js"></script>
     <script src="main.js"></script>
 
     <meta charset="UTF-8">
@@ -15,7 +17,6 @@
 
 <body>
 
-<div class="viz">
     <div class="title">
         <div id="animationTopCaption" class="header">Vision Zero: Photo Tickets 2010-2014 </div>
         <div  class="header">
@@ -46,74 +47,42 @@
             <button id='animateButton' onclick='DN.animateMap()' type="button">Animate</button>
 
         </div>
-
-
-
-
-    <div class="container">
-
-                    <div class="vizPanel">
-                        <div id="loader_container"> </div>
-                </div>
-
-
-    <div class="footnote">Data By: DC Vision Zero Project</div>
-
     </div>
 
 
-</div>
 
-<script>
+    <div id="loader" align="center">
+        <svg width='500px' height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-balls"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><g transform="rotate(0 50 50)">
+            <circle r="5" cx="30" cy="50">
+                <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+                <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#51cacc;#9df871"/>
+            </circle>
+        </g><g transform="rotate(90 50 50)">
+            <circle r="5" cx="30" cy="50">
+                <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+                <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#9df871;#e0ff77"/>
+            </circle>
+        </g><g transform="rotate(180 50 50)">
+            <circle r="5" cx="30" cy="50">
+                <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+                <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#e0ff77;#de9dd6"/>
+            </circle>
+        </g><g transform="rotate(270 50 50)">
+            <circle r="5" cx="30" cy="50">
+                <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite" dur="1s" values="0 0;19.999999999999996 -20" keyTimes="0;1"/>
+                <animate attributeName="fill" dur="1s" begin="0s" repeatCount="indefinite"  keyTimes="0;1" values="#de9dd6;#51cacc"/>
+            </circle>
+        </g></svg>
+    </div>
 
-    function loader(config) {
-        return function() {
-            var radius = Math.min(config.width, config.height) / 2;
-            var tau = 2 * Math.PI;
+    <div class="container">
 
-            var arc = d3.svg.arc()
-                    .innerRadius(radius*0.5)
-                    .outerRadius(radius*0.9)
-                    .startAngle(0);
+            <div class="vizPanel"></div>
+            <div id="chart"></div>
 
-            var svg = d3.select(config.container).append("svg")
-                    .attr("id", config.id)
-                    .attr("width", config.width)
-                    .attr("height", config.height)
-                    .append("g")
-                    .attr("transform", "translate(" + config.width / 2 + "," + config.height / 2 + ")")
+    </div>
 
-            var background = svg.append("path")
-                    .datum({endAngle: 0.33*tau})
-                    .style("fill", "#4D4D4D")
-                    .attr("d", arc)
-                    .call(spin, 1500)
+    <div class="footnote">Data By: DC Vision Zero Project</div>
 
-            function spin(selection, duration) {
-                selection.transition()
-                        .ease("linear")
-                        .duration(duration)
-                        .attrTween("transform", function() {
-                            return d3.interpolateString("rotate(0)", "rotate(360)");
-                        });
-
-                setTimeout(function() { spin(selection, duration); }, duration);
-            }
-
-            function transitionFunction(path) {
-                path.transition()
-                        .duration(7500)
-                        .attrTween("stroke-dasharray", tweenDash)
-                        .each("end", function() { d3.select(this).call(transition); });
-            }
-
-        };
-    }
-
-
-    var myLoader = loader({width: 960, height: 500, container: "#loader_container", id: "loader"});
-    myLoader();
-
-</script>
 </body>
 </html>

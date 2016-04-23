@@ -1,4 +1,12 @@
 var DN = {};
+DN.chartFlag= null;
+DN['2010'] = 0;
+DN['2011']= 0;
+DN['2012']= 0;
+DN['2013']= 0;
+DN['2014']= 0;
+DN['2015']= 0;
+
 if(DN){
     DN.intervalID=null;
     DN.dataSwitch = 'January_2010';
@@ -21,9 +29,29 @@ d3.json("data/allTicketsBySeg.geojson", function (error, data) {
 
 DN.currentMonthTotal = 0;
 
+
+DN.generateChart=function(){
+    DN.chartFlag = true;
+
+    DN.chart = c3.generate({
+        data: {
+            columns: [ ['2010',0],['2011',0],['2012',0],['2013',0],['2014',0],['2015',0]],
+            type: 'bar'
+        },
+        bar: {
+            width: {
+                ratio: 0.5 // this makes bar width 50% of length between ticks
+            }
+            // or
+            //width: 100 // this makes bar width 100px
+        }
+    });
+}
+
 DN.generateD3Map=function(data){
 
     d3.select(".vizPanel").append("svg").attr("width", "100%").attr("height", "100%").attr("id","svgMap");
+
 
 
 
@@ -82,7 +110,7 @@ DN.generateD3Map=function(data){
 
 
 
-    $("#loader_container").fadeOut();
+    $("#loader").fadeOut();
 
 
 
@@ -138,6 +166,11 @@ function numberWithCommas(x) {
     };
 
 DN.animateMap = function(){
+
+    if(!DN.chartFlag){
+        DN.generateChart();
+    }
+
     $("#animateButton").attr("onclick","DN.stopAnimate()");
     $("#animateButton").html("Stop");
 
@@ -161,6 +194,8 @@ DN.stopAnimate = function(){
         }else{
             DN.dataSwitch = inDataSwitch
         }
+        var year = $('#YearSelector').val();
+
 
         DN.currentMonthTotal = 0;
 
@@ -170,6 +205,7 @@ DN.stopAnimate = function(){
 
                 if(obj.properties[DN.dataSwitch]){
                     DN.currentMonthTotal += obj.properties[DN.dataSwitch]
+
                 }
 
 
@@ -197,8 +233,15 @@ DN.stopAnimate = function(){
                     return "3";
                 }
 
-            })
+            });
 
+        DN[year] += DN.currentMonthTotal;
+
+        DN.chart.load({
+            rows: [
+                [year],[DN[year]]
+            ]
+        });
     }
 
 
