@@ -30,6 +30,14 @@ d3.json("data/allTicketsBySeg.geojson", function (error, data) {
 DN.currentMonthTotal = 0;
 
 
+DN.destroyChart=function(){
+
+    $("#chart").html("");
+    DN.chartFlag = false;
+
+
+}
+
 DN.generateChart=function(){
     DN.chartFlag = true;
 
@@ -145,7 +153,9 @@ function numberWithCommas(x) {
         if( DN.count ==allTimeArray.length-1){
             DN.count = -1;
             DN.stopAnimate();
+            DN.destroyChart();
             return;
+
         }
 
         $("#animationTopCaption").fadeOut(10);
@@ -161,7 +171,7 @@ function numberWithCommas(x) {
         $('#YearSelector').val(split[1]);
 
         DN.changeMap(allTimeArray[DN.count]);
-        $("#animationTopCaption").html(split[0]+" "+split[1]+": " +  numberWithCommas(DN.currentMonthTotal) + " Camera Tickets").fadeIn(1000);
+        $("#animationTopCaption").html(split[0]+" "+split[1]+": " +  numberWithCommas(DN.currentMonthTotal) + " Camera Tickets").fadeIn(500);
 
     };
 
@@ -174,14 +184,16 @@ DN.animateMap = function(){
     $("#animateButton").attr("onclick","DN.stopAnimate()");
     $("#animateButton").html("Stop");
 
-    DN.intervalID = setInterval(DN.incrementMap, 1500);
+    DN.intervalID = setInterval(DN.incrementMap, 1000);
 };
 
 DN.stopAnimate = function(){
     $("#animateButton").attr("onclick","DN.animateMap()");
     $("#animateButton").html("Animate");
     clearInterval(DN.intervalID);
+
 };
+
 
 
 
